@@ -30,6 +30,7 @@
         {
             btnImport = new Button();
             btnRun = new Button();
+            lblResult = new Label();
             SuspendLayout();
             // 
             // btnImport
@@ -52,12 +53,22 @@
             btnRun.UseVisualStyleBackColor = true;
             btnRun.Click += btnRun_Click;
             // 
+            // lblResult
+            // 
+            lblResult.AutoSize = true;
+            lblResult.Location = new Point(12, 9);
+            lblResult.Name = "lblResult";
+            lblResult.Size = new Size(45, 15);
+            lblResult.TabIndex = 2;
+            lblResult.Text = "Result: ";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
             ClientSize = new Size(284, 261);
+            Controls.Add(lblResult);
             Controls.Add(btnRun);
             Controls.Add(btnImport);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -66,11 +77,13 @@
             Text = "HomeForm";
             Load += Form1_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button btnImport;
         private Button btnRun;
+        private Label lblResult;
     }
 }

@@ -1,3 +1,9 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using EasyPost;
+using EasyPost.Models.API;
 namespace ChuyenDoiDonHang
 {
     internal static class Program
@@ -10,7 +16,10 @@ namespace ChuyenDoiDonHang
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Khởi tạo và hiển thị Form1
             Application.Run(new Form1());
         }
     }
