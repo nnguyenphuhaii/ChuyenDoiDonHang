@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			btnImport = new Button();
 			btnRun = new Button();
 			lblResult = new Label();
@@ -72,6 +73,7 @@
 			Controls.Add(btnRun);
 			Controls.Add(btnImport);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Form1";
 			StartPosition = FormStartPosition.CenterScreen;
 			Text = "HomeForm";

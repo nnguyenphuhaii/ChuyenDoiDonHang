@@ -55,14 +55,16 @@ namespace ChuyenDoiDonHang
 						{
 							orders = csv.GetRecords<Order>().ToList();
 							orders.RemoveAt(0);
+							lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy\nvà xuất file.";
 						}
 					}
-					
+
 				}
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				lblResult.Text = "Result: " + ex.Message;
 			}
 		}
 
@@ -77,6 +79,7 @@ namespace ChuyenDoiDonHang
 			{
 				ExportToCsv(orders, saveFileDialog1.FileName);
 				MessageBox.Show("File đã được lưu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				lblResult.Text = "File đã được lưu thành công!";
 			}
 		}
 		public void ExportToCsv(List<Order> orders, string filePath)
