@@ -1,6 +1,7 @@
 ﻿using ChuyenDoiDonHang.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace ChuyenDoiDonHang
 		//string zip = "64083";
 		//string country = "United States";
 		List<Order> orders = new List<Order>();
+		List<OrderOut> ordersOut = new List<OrderOut>();
 
 
 		public Form1()
@@ -54,7 +56,12 @@ namespace ChuyenDoiDonHang
 						using (var csv = new CsvReader(reader, config))
 						{
 							orders = csv.GetRecords<Order>().ToList();
+							//Order firstRow = orders.FirstOrDefault();
+							//ordersOut.Add(firstRow);
 							orders.RemoveAt(0);
+							ordersOut = orders.Select(p => new OrderOut { ID = p.Name, ProductSKU = p.LineitemSku, Quantity = p.LineitemQuantity,
+								Name = p.ShippingName, Telephone = p.ShippingPhone, Countrycode = p.ShippingCountry, Province = p.ShippingProvince,
+								City = p.ShippingCity, Street = p.ShippingAddress1, Postcode = p.ShippingZip}).ToList();
 							lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy\nvà xuất file.";
 						}
 					}
@@ -77,17 +84,17 @@ namespace ChuyenDoiDonHang
 
 			if (saveFileDialog1.FileName != "")
 			{
-				ExportToCsv(orders, saveFileDialog1.FileName);
+				ExportToCsv(ordersOut, saveFileDialog1.FileName);
 				MessageBox.Show("File đã được lưu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				lblResult.Text = "File đã được lưu thành công!";
 			}
 		}
-		public void ExportToCsv(List<Order> orders, string filePath)
+		public void ExportToCsv(List<OrderOut> ordersOut, string filePath)
 		{
 			using (var writer = new StreamWriter(filePath))
 			using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
 			{
-				csv.WriteRecords(orders);
+				csv.WriteRecords(ordersOut);
 			}
 		}
 	}
