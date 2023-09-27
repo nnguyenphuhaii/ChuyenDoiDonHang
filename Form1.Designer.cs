@@ -53,7 +53,7 @@
             // 
             // btnRun
             // 
-            btnRun.Location = new Point(139, 126);
+            btnRun.Location = new Point(142, 126);
             btnRun.Name = "btnRun";
             btnRun.Size = new Size(75, 23);
             btnRun.TabIndex = 1;
@@ -66,13 +66,13 @@
             lblResult.Dock = DockStyle.Top;
             lblResult.Location = new Point(0, 24);
             lblResult.Name = "lblResult";
-            lblResult.Size = new Size(227, 83);
+            lblResult.Size = new Size(232, 83);
             lblResult.TabIndex = 2;
             lblResult.Text = "Result: ";
             // 
             // btnAddPreset
             // 
-            btnAddPreset.Location = new Point(139, 97);
+            btnAddPreset.Location = new Point(142, 97);
             btnAddPreset.Name = "btnAddPreset";
             btnAddPreset.Size = new Size(75, 23);
             btnAddPreset.TabIndex = 3;
@@ -93,7 +93,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(227, 24);
+            menuStrip1.Size = new Size(232, 24);
             menuStrip1.TabIndex = 5;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -108,7 +108,7 @@
             // 
             menuDeletePreset.Image = Properties.Resources.icons8_delete_24;
             menuDeletePreset.Name = "menuDeletePreset";
-            menuDeletePreset.Size = new Size(180, 22);
+            menuDeletePreset.Size = new Size(142, 22);
             menuDeletePreset.Text = "Delete Preset";
             menuDeletePreset.Click += menuDeletePreset_Click;
             // 
@@ -116,7 +116,7 @@
             // 
             menuExit.Image = Properties.Resources.icons8_exit_502;
             menuExit.Name = "menuExit";
-            menuExit.Size = new Size(180, 22);
+            menuExit.Size = new Size(142, 22);
             menuExit.Text = "Exit";
             menuExit.Click += menuExit_Click;
             // 
@@ -125,7 +125,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
-            ClientSize = new Size(227, 161);
+            ClientSize = new Size(232, 161);
             Controls.Add(cboPreset);
             Controls.Add(btnAddPreset);
             Controls.Add(lblResult);

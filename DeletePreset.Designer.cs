@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            comboBox1 = new ComboBox();
+            cboDeletePreset = new ComboBox();
             btnDelete = new Button();
             btnCancel = new Button();
             SuspendLayout();
             // 
-            // comboBox1
+            // cboDeletePreset
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(12, 12);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
-            comboBox1.TabIndex = 0;
+            cboDeletePreset.FormattingEnabled = true;
+            cboDeletePreset.Location = new Point(12, 12);
+            cboDeletePreset.Name = "cboDeletePreset";
+            cboDeletePreset.Size = new Size(121, 23);
+            cboDeletePreset.TabIndex = 0;
             // 
             // btnDelete
             // 
@@ -49,6 +49,7 @@
             btnDelete.TabIndex = 1;
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnCancel
             // 
@@ -69,16 +70,17 @@
             ClientSize = new Size(308, 49);
             Controls.Add(btnCancel);
             Controls.Add(btnDelete);
-            Controls.Add(comboBox1);
+            Controls.Add(cboDeletePreset);
             Name = "DeletePreset";
             StartPosition = FormStartPosition.CenterParent;
             Text = "DeletePreset";
+            Load += DeletePreset_Load;
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ComboBox comboBox1;
+        private ComboBox cboDeletePreset;
         private Button btnDelete;
         private Button btnCancel;
     }

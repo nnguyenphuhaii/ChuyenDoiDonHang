@@ -182,6 +182,7 @@ namespace ChuyenDoiDonHang
 
                             // Hiển thị tên preset trong combobox
                             cboPreset.SelectedItem = newPreset.Name;
+                            lblResult.Text = "Result: Thêm Preset " + newPreset.Name + " thành công!";
 
                             SavePresetsToFile();
                             // Xóa nội dung trường tên preset
@@ -224,7 +225,7 @@ namespace ChuyenDoiDonHang
             File.WriteAllText(jsonPath, json);
         }
 
-        private void LoadPresetsFromFile()
+        public void LoadPresetsFromFile()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string formulasFolderPath = Path.Combine(documentsPath, "Formulas");
@@ -237,9 +238,10 @@ namespace ChuyenDoiDonHang
                 presets = JsonConvert.DeserializeObject<List<Preset>>(json);
             }
         }
-        private void UpdateComboBox()
+        public void UpdateComboBox()
         {
             cboPreset.Items.Clear();
+            cboPreset.Text = "";
 
             foreach (Preset preset in presets)
             {
@@ -263,8 +265,14 @@ namespace ChuyenDoiDonHang
 
         private void menuDeletePreset_Click(object sender, EventArgs e)
         {
-            DeletePreset deleteForm = new DeletePreset();
+            DeletePreset deleteForm = new DeletePreset(this);
             deleteForm.ShowDialog();
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            LoadPresetsFromFile();
+            UpdateComboBox();
         }
     }
 }
