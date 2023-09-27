@@ -38,6 +38,8 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             menuDeletePreset = new ToolStripMenuItem();
             menuExit = new ToolStripMenuItem();
+            btnReload = new Button();
+            testToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -99,16 +101,17 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuDeletePreset, menuExit });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuDeletePreset, menuExit, testToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
+            fileToolStripMenuItem.Click += fileToolStripMenuItem_Click_1;
             // 
             // menuDeletePreset
             // 
             menuDeletePreset.Image = Properties.Resources.icons8_delete_24;
             menuDeletePreset.Name = "menuDeletePreset";
-            menuDeletePreset.Size = new Size(142, 22);
+            menuDeletePreset.Size = new Size(180, 22);
             menuDeletePreset.Text = "Delete Preset";
             menuDeletePreset.Click += menuDeletePreset_Click;
             // 
@@ -116,9 +119,26 @@
             // 
             menuExit.Image = Properties.Resources.icons8_exit_502;
             menuExit.Name = "menuExit";
-            menuExit.Size = new Size(142, 22);
+            menuExit.Size = new Size(180, 22);
             menuExit.Text = "Exit";
             menuExit.Click += menuExit_Click;
+            // 
+            // btnReload
+            // 
+            btnReload.Image = Properties.Resources.icons8_reload_302;
+            btnReload.Location = new Point(93, 126);
+            btnReload.Name = "btnReload";
+            btnReload.Size = new Size(43, 23);
+            btnReload.TabIndex = 6;
+            btnReload.UseVisualStyleBackColor = true;
+            btnReload.Click += btnReload_Click;
+            // 
+            // testToolStripMenuItem
+            // 
+            testToolStripMenuItem.Name = "testToolStripMenuItem";
+            testToolStripMenuItem.Size = new Size(180, 22);
+            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -126,6 +146,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
             ClientSize = new Size(232, 161);
+            Controls.Add(btnReload);
             Controls.Add(cboPreset);
             Controls.Add(btnAddPreset);
             Controls.Add(lblResult);
@@ -156,5 +177,7 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem menuDeletePreset;
         private ToolStripMenuItem menuExit;
+        private Button btnReload;
+        private ToolStripMenuItem testToolStripMenuItem;
     }
 }

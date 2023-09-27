@@ -1,4 +1,5 @@
-﻿using ChuyenDoiDonHang.Model;
+﻿using ChuyenDoiDonHang.HereAPI;
+using ChuyenDoiDonHang.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
@@ -273,6 +274,40 @@ namespace ChuyenDoiDonHang
         {
             LoadPresetsFromFile();
             UpdateComboBox();
+        }
+        private async void CheckAddress(string addressToCheck)
+        {
+            HereAPIService hereApiService = new HereAPIService();
+
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string formulasFolderPath = Path.Combine(documentsPath, "Formulas");
+            try
+            {
+                bool isValid = await hereApiService.CheckAddressValidity(addressToCheck);
+
+                if (isValid)
+                {
+                    MessageBox.Show("Địa chỉ hợp lệ.");
+                }
+                else
+                {
+                    MessageBox.Show("Địa chỉ không hợp lệ.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}");
+            }
+        }
+
+        private void fileToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
