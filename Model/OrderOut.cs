@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyPost.Models.API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,5 +30,17 @@ namespace ChuyenDoiDonHang.Model
 		public string? MTF { get; set; }
 		public string? Ads { get; set; }
 		public string? VerifyAddress { get; set; }
+
+		public Address ToAddress()
+		{
+			return new Address
+			{
+				CountryCode = this.Countrycode,
+				Province = this.Province,
+				City = this.City,
+				Street = this.Street,
+				Postcode = this.Postcode
+			};
+		}
 	}
 }
