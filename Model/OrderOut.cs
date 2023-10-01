@@ -35,11 +35,11 @@ namespace ChuyenDoiDonHang.Model
 		{
 			return new Address
 			{
-				CountryCode = this.Countrycode,
-				Province = this.Province,
+				AddressLine1 = this.Street,
 				City = this.City,
-				Street = this.Street,
-				Postcode = this.Postcode
+				State = this.Province,
+				PostalCode = this.Postcode,
+				Country = this.Countrycode
 			};
 		}
 	}

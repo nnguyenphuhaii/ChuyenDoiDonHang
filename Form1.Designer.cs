@@ -110,7 +110,7 @@
 			// 
 			menuDeletePreset.Image = Properties.Resources.icons8_delete_24;
 			menuDeletePreset.Name = "menuDeletePreset";
-			menuDeletePreset.Size = new Size(142, 22);
+			menuDeletePreset.Size = new Size(180, 22);
 			menuDeletePreset.Text = "Delete Preset";
 			menuDeletePreset.Click += menuDeletePreset_Click;
 			// 
@@ -118,15 +118,16 @@
 			// 
 			menuExit.Image = Properties.Resources.icons8_exit_502;
 			menuExit.Name = "menuExit";
-			menuExit.Size = new Size(142, 22);
+			menuExit.Size = new Size(180, 22);
 			menuExit.Text = "Exit";
 			menuExit.Click += menuExit_Click;
 			// 
 			// testToolStripMenuItem
 			// 
 			testToolStripMenuItem.Name = "testToolStripMenuItem";
-			testToolStripMenuItem.Size = new Size(142, 22);
+			testToolStripMenuItem.Size = new Size(180, 22);
 			testToolStripMenuItem.Text = "Test";
+			testToolStripMenuItem.Click += testToolStripMenuItem_Click;
 			// 
 			// Form1
 			// 

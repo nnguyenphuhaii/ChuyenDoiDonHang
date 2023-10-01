@@ -3,6 +3,7 @@ using ChuyenDoiDonHang.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
 using System.Reflection.Emit;
@@ -87,13 +88,10 @@ namespace ChuyenDoiDonHang
 									}
 								}
 							}
-
-
-
-							lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy và xuất file.";
 						}
 					}
-
+					VerifyAddresses(ordersOut);
+					lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy và xuất file.";
 				}
 			}
 			catch (Exception ex)
@@ -301,22 +299,95 @@ namespace ChuyenDoiDonHang
 		//	}
 		//}
 
-
 		private void fileToolStripMenuItem_Click_1(object sender, EventArgs e)
 		{
 
 		}
 
-		//      private void testToolStripMenuItem_Click(object sender, EventArgs e)
-		//      {
-		//          Address address = new Address();
-		//          address.City = "Knoxville";
-		//          address.Street = "2008 Merle Ln";
-		//          address.Province = "Tennessee";
-		//          address.Postcode = "37931";
-		//          address.CountryCode = "US";
+		private async void testToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				Address address = new Address
+				{
+					AddressLine1 = "7307 Southwind Dr",
+					City = "Chesterfield",
+					State = "Virginia",
+					PostalCode = "23832",
+					Country = "US"
+				};
+				string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+				string apiKey = "bjoNVvxd1Sk0wsFMKUThIE**nSAcwXpxhQ0PC2lXxuDAZ-**"; // Thay YOUR_API_KEY bằng API key của bạn
 
-		//          CheckAddress(address);
-		//}
+				//string requestUrl = $"{apiUrl}?AddressLine1={address.AddressLine1}&City={address.City}&State={address.State}&PostalCode={address.PostalCode}&Country={address.Country}&Key={apiKey}";
+				string requestUrl = $"{apiUrl}?id={apiKey}&a1={address.AddressLine1}&loc={address.City}&admarea={address.State}&postal={address.PostalCode}&ctry={address.Country}&format=JSON";
+
+				HttpClient client = new HttpClient();
+				HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+				if (response.IsSuccessStatusCode)
+				{
+					string responseBody = await response.Content.ReadAsStringAsync();
+					Console.WriteLine(responseBody);
+					// Xử lý phản hồi từ API ở đây
+				}
+				else
+				{
+					// Xử lý khi yêu cầu thất bại
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				lblResult.Text = "Result: " + ex.Message;
+			}
+			
+		}
+		private async Task VerifyAddresses(List<OrderOut> ordersOut)
+		{
+			try
+			{
+				foreach (OrderOut order in ordersOut)
+				{
+					string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+					string apiKey = "bjoNVvxd1Sk0wsFMKUThIE**nSAcwXpxhQ0PC2lXxuDAZ-**";
+
+					string requestUrl = $"{apiUrl}?id={apiKey}&a1={order.Street}&loc={order.City}&admarea={order.Province}&postal={order.Postcode}&ctry={order.Countrycode}&format=JSON";
+
+					HttpClient client = new HttpClient();
+					HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+					if (response.IsSuccessStatusCode)
+					{
+						string responseBody = await response.Content.ReadAsStringAsync();
+						JObject responseObject = JObject.Parse(responseBody);
+						string results = (string)responseObject["Records"][0]["Results"];
+
+						if (results.Contains("AV21") || results.Contains("AV22") || results.Contains("AV23") || results.Contains("AV24") || results.Contains("AV25"))
+						{
+							order.VerifyAddress = "TRUE"; // Địa chỉ hợp lệ
+						}
+						else if (results.Contains("AV11") || results.Contains("AV12") || results.Contains("AV13") || results.Contains("AV14"))
+						{
+							order.VerifyAddress = "SUSPECT"; // Địa chỉ có vấn đề  
+						}
+						else
+						{
+							order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
+						}
+					}
+					else
+					{
+						order.VerifyAddress = "THẤT BẠI"; // Xử lý khi yêu cầu thất bại
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				lblResult.Text = "Result: " + ex.Message;
+			}
+		}
+
 	}
 }
