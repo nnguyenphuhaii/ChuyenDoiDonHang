@@ -317,7 +317,7 @@ namespace ChuyenDoiDonHang
 					Country = "US"
 				};
 				string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
-				string apiKey = "bjoNVvxd1Sk0wsFMKUThIE**nSAcwXpxhQ0PC2lXxuDAZ-**"; // Thay YOUR_API_KEY bằng API key của bạn
+				string apiKey = "eofMMY1Vf3p3zZqFjq_Gb6**nSAcwXpxhQ0PC2lXxuDAZ-**"; // Thay YOUR_API_KEY bằng API key của bạn
 
 				//string requestUrl = $"{apiUrl}?AddressLine1={address.AddressLine1}&City={address.City}&State={address.State}&PostalCode={address.PostalCode}&Country={address.Country}&Key={apiKey}";
 				string requestUrl = $"{apiUrl}?id={apiKey}&a1={address.AddressLine1}&loc={address.City}&admarea={address.State}&postal={address.PostalCode}&ctry={address.Country}&format=JSON";
@@ -350,7 +350,7 @@ namespace ChuyenDoiDonHang
 				foreach (OrderOut order in ordersOut)
 				{
 					string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
-					string apiKey = "bjoNVvxd1Sk0wsFMKUThIE**nSAcwXpxhQ0PC2lXxuDAZ-**";
+					string apiKey = "eofMMY1Vf3p3zZqFjq_Gb6**nSAcwXpxhQ0PC2lXxuDAZ-**";
 
 					string requestUrl = $"{apiUrl}?id={apiKey}&a1={order.Street}&loc={order.City}&admarea={order.Province}&postal={order.Postcode}&ctry={order.Countrycode}&format=JSON";
 
@@ -375,6 +375,21 @@ namespace ChuyenDoiDonHang
 						{
 							order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
 						}
+
+						//string results = (string)responseObject["Records"][0]["Results"];
+
+						//if (responseBody.Contains("AV21") || responseBody.Contains("AV22") || responseBody.Contains("AV23") || responseBody.Contains("AV24") || responseBody.Contains("AV25"))
+						//{
+						//	order.VerifyAddress = "TRUE"; // Địa chỉ hợp lệ
+						//}
+						//else if (responseBody.Contains("AV11") || responseBody.Contains("AV12") || responseBody.Contains("AV13") || responseBody.Contains("AV14"))
+						//{
+						//	order.VerifyAddress = "SUSPECT"; // Địa chỉ có vấn đề  
+						//}
+						//else
+						//{
+						//	order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
+						//}
 					}
 					else
 					{
