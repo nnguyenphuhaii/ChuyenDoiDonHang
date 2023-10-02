@@ -30,7 +30,7 @@ namespace ChuyenDoiDonHang
 			UpdateComboBox();
 		}
 
-		private void btnImport_Click(object sender, EventArgs e)
+		private async void btnImport_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -90,7 +90,7 @@ namespace ChuyenDoiDonHang
 							}
 						}
 					}
-					VerifyAddresses(ordersOut);
+					await VerifyAddresses(ordersOut);
 					lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy và xuất file.";
 				}
 			}
@@ -316,7 +316,8 @@ namespace ChuyenDoiDonHang
 					PostalCode = "23832",
 					Country = "US"
 				};
-				string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+				//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+				string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
 				string apiKey = "eofMMY1Vf3p3zZqFjq_Gb6**nSAcwXpxhQ0PC2lXxuDAZ-**"; // Thay YOUR_API_KEY bằng API key của bạn
 
 				//string requestUrl = $"{apiUrl}?AddressLine1={address.AddressLine1}&City={address.City}&State={address.State}&PostalCode={address.PostalCode}&Country={address.Country}&Key={apiKey}";
@@ -347,11 +348,12 @@ namespace ChuyenDoiDonHang
 		{
 			try
 			{
+				int dem = 0;
+				string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
+				//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+				string apiKey = "Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**";
 				foreach (OrderOut order in ordersOut)
 				{
-					string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
-					string apiKey = "eofMMY1Vf3p3zZqFjq_Gb6**nSAcwXpxhQ0PC2lXxuDAZ-**";
-
 					string requestUrl = $"{apiUrl}?id={apiKey}&a1={order.Street}&loc={order.City}&admarea={order.Province}&postal={order.Postcode}&ctry={order.Countrycode}&format=JSON";
 
 					HttpClient client = new HttpClient();
@@ -360,41 +362,33 @@ namespace ChuyenDoiDonHang
 					if (response.IsSuccessStatusCode)
 					{
 						string responseBody = await response.Content.ReadAsStringAsync();
-						JObject responseObject = JObject.Parse(responseBody);
-						string results = (string)responseObject["Records"][0]["Results"];
+						//JObject responseObject = JObject.Parse(responseBody);
+						//string results = (string)responseObject["Records"][0]["Results"];
 
-						if (results.Contains("AV21") || results.Contains("AV22") || results.Contains("AV23") || results.Contains("AV24") || results.Contains("AV25"))
+						if (responseBody.Contains("AS"))
 						{
 							order.VerifyAddress = "TRUE"; // Địa chỉ hợp lệ
 						}
-						else if (results.Contains("AV11") || results.Contains("AV12") || results.Contains("AV13") || results.Contains("AV14"))
+						else if (responseBody.Contains("AC"))
 						{
 							order.VerifyAddress = "SUSPECT"; // Địa chỉ có vấn đề  
 						}
-						else
+						else if (responseBody.Contains("AE"))
 						{
 							order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
 						}
-
-						//string results = (string)responseObject["Records"][0]["Results"];
-
-						//if (responseBody.Contains("AV21") || responseBody.Contains("AV22") || responseBody.Contains("AV23") || responseBody.Contains("AV24") || responseBody.Contains("AV25"))
-						//{
-						//	order.VerifyAddress = "TRUE"; // Địa chỉ hợp lệ
-						//}
-						//else if (responseBody.Contains("AV11") || responseBody.Contains("AV12") || responseBody.Contains("AV13") || responseBody.Contains("AV14"))
-						//{
-						//	order.VerifyAddress = "SUSPECT"; // Địa chỉ có vấn đề  
-						//}
-						//else
-						//{
-						//	order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
-						//}
+						else
+						{ 
+							order.VerifyAddress = "NOCREDIT";
+						}
 					}
 					else
 					{
 						order.VerifyAddress = "THẤT BẠI"; // Xử lý khi yêu cầu thất bại
 					}
+					dem++;
+					lblResult.Text = "Đã Verify xong dòng " + dem;
+					await Task.Delay(50);
 				}
 			}
 			catch (Exception ex)
