@@ -91,7 +91,7 @@ namespace ChuyenDoiDonHang
 						}
 					}
 					await VerifyAddresses(ordersOut);
-					lblResult.Text = "Đọc file thành công.\nVui lòng bấm Run để chạy và xuất file.";
+					lblResult.Text = "Thành công.\nVui lòng bấm Run để chạy và xuất file.";
 				}
 			}
 			catch (Exception ex)
