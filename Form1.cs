@@ -118,7 +118,7 @@ namespace ChuyenDoiDonHang
 						}
 					}
 					// Tắt tạm để test những tính năng khác
-					//await VerifyAddresses(ordersOut);
+					await VerifyAddresses(ordersOut);
 					lblResult.Text = "Thành công.\nVui lòng bấm Run để chạy và xuất file.";
 				}
 			}

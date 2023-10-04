@@ -21,10 +21,10 @@ namespace ChuyenDoiDonHang.Model
 		public string? Postcode { get; set; }
 		public string? DesignLink { get; set; }
 		public string? MockupLink { get; set; }
+		public string? CustomName { get; set; }
 		public string? BaseCost { get; set; }
 		public string? VAT { get; set; }
 		public string? Note { get; set; }
-		public string? CustomName { get; set; }
         public string? VerifyAddress { get; set; }
 
 		public Address ToAddress()
