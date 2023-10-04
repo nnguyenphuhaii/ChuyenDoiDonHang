@@ -63,6 +63,16 @@ namespace ChuyenDoiDonHang.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _11111 {
+            get {
+                object obj = ResourceManager.GetObject("11111", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_delete_24 {
             get {
                 object obj = ResourceManager.GetObject("icons8-delete-24", resourceCulture);

@@ -58,7 +58,7 @@
 			btnRun.Name = "btnRun";
 			btnRun.Size = new Size(75, 23);
 			btnRun.TabIndex = 1;
-			btnRun.Text = "Run";
+			btnRun.Text = "Save";
 			btnRun.UseVisualStyleBackColor = true;
 			btnRun.Click += btnRun_Click;
 			// 
@@ -100,7 +100,7 @@
 			// 
 			// fileToolStripMenuItem
 			// 
-			fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuDeletePreset, menuExit, testToolStripMenuItem });
+			fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuDeletePreset, testToolStripMenuItem, menuExit });
 			fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			fileToolStripMenuItem.Size = new Size(37, 20);
 			fileToolStripMenuItem.Text = "File";
@@ -124,9 +124,10 @@
 			// 
 			// testToolStripMenuItem
 			// 
+			testToolStripMenuItem.Image = Properties.Resources._11111;
 			testToolStripMenuItem.Name = "testToolStripMenuItem";
 			testToolStripMenuItem.Size = new Size(180, 22);
-			testToolStripMenuItem.Text = "Test";
+			testToolStripMenuItem.Text = "Change API Key";
 			testToolStripMenuItem.Click += testToolStripMenuItem_Click;
 			// 
 			// Form1

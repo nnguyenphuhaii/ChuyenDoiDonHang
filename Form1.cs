@@ -19,6 +19,8 @@ namespace ChuyenDoiDonHang
 		List<OrderOut> ordersOut = new List<OrderOut>();
 		List<Preset> presets = new List<Preset>();
 		OpenFileDialog openFileDialog = new OpenFileDialog();
+		string APIKeyPath = "";
+		string apiKey = "";
 
 		public Form1()
 		{
@@ -27,8 +29,10 @@ namespace ChuyenDoiDonHang
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			LoadAPIKey();
 			LoadPresetsFromFile();
 			UpdateComboBox();
+
 		}
 
 		private async void btnImport_Click(object sender, EventArgs e)
@@ -63,24 +67,24 @@ namespace ChuyenDoiDonHang
 								{
 									break;
 								}
-                                if (CountingGach(order.LineitemSku) >= 2)
-                                {
-                                    // Tách chuỗi thành mảng các phần
-                                    string[] phanTach = order.LineitemSku.Split('-');
+								if (CountingGach(order.LineitemSku) >= 2)
+								{
+									// Tách chuỗi thành mảng các phần
+									string[] phanTach = order.LineitemSku.Split('-');
 
-                                    // Lấy phần tử cuối cùng trong mảng
-                                    string kyTuSauDauGach = phanTach[phanTach.Length - 1];
+									// Lấy phần tử cuối cùng trong mảng
+									string kyTuSauDauGach = phanTach[phanTach.Length - 1];
 
-                                    Console.WriteLine($"Ký tự sau dấu gạch thứ hai là: {kyTuSauDauGach}");
-                                }
-                            }
+									Console.WriteLine($"Ký tự sau dấu gạch thứ hai là: {kyTuSauDauGach}");
+								}
+							}
 							ordersOut = orders.Select(p => new OrderOut
 							{
 								ID = p.Name,
 								ProductSKU = p.LineitemSku,
 								Size = SizeCalculator(p.LineitemSku),
-                                CustomName = p.LineitemProperties,
-                                Quantity = p.LineitemQuantity,
+								CustomName = p.LineitemProperties,
+								Quantity = p.LineitemQuantity,
 								Name = p.ShippingName,
 								Telephone = p.ShippingPhone,
 								Countrycode = p.ShippingCountryCode,
@@ -111,15 +115,15 @@ namespace ChuyenDoiDonHang
 										else
 										{
 											orderOut.ProductSKU = "#######";
-                                        }
-                                    }
-                                }
+										}
+									}
+								}
 							}
 						}
 					}
 					// Tắt tạm để test những tính năng khác
 					await VerifyAddresses(ordersOut);
-					lblResult.Text = "Thành công.\nVui lòng bấm Run để chạy và xuất file.";
+					lblResult.Text = "Thành công.\nVui lòng bấm Save để xuất file.";
 				}
 			}
 			catch (Exception ex)
@@ -145,7 +149,7 @@ namespace ChuyenDoiDonHang
 		}
 		public void ExportToCsv(List<OrderOut> ordersOut, string filePath)
 		{
-			using (var writer = new StreamWriter(filePath))
+			using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
 			using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
 			{
 				csv.WriteRecords(ordersOut);
@@ -251,7 +255,53 @@ namespace ChuyenDoiDonHang
 
 			File.WriteAllText(jsonPath, json);
 		}
+		private void LoadAPIKey()
+		{
+			//string myDocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			//Console.WriteLine(myDocumentsPath);
+			//string formulasFolderPath = Path.Combine(myDocumentsPath, "Formulas");
 
+			//if (!Directory.Exists(formulasFolderPath))
+			//{
+			//	Directory.CreateDirectory(formulasFolderPath);
+			//}
+
+			//string APIKeyPath = Path.Combine(formulasFolderPath, "APIKey.json");
+			//string apiKeyJson = File.ReadAllText(APIKeyPath, Encoding.UTF8);
+
+
+			//if (File.Exists(APIKeyPath))
+			//{
+			//	apiKey = JsonConvert.DeserializeObject<string>(apiKeyJson);
+			//}
+			//else
+			//{
+			//	File.WriteAllText(APIKeyPath, JsonConvert.SerializeObject("Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**"));
+
+
+			//	apiKey = JsonConvert.DeserializeObject<string>(apiKeyJson);
+			//}
+
+			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			string formulasFolderPath = Path.Combine(documentsPath, "Formulas");
+			APIKeyPath = Path.Combine(formulasFolderPath, "APIKey.json");
+
+			if (!Directory.Exists(Path.GetDirectoryName(APIKeyPath)))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(APIKeyPath));
+			}
+			if (!File.Exists(APIKeyPath))
+			{
+				File.WriteAllText(APIKeyPath, JsonConvert.SerializeObject("Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**"));
+				string apiKeyJson = File.ReadAllText(APIKeyPath, Encoding.UTF8);
+				apiKey = JsonConvert.DeserializeObject<string>(apiKeyJson);
+			}
+			else
+			{
+				string apiKeyJson = File.ReadAllText(APIKeyPath, Encoding.UTF8);
+				apiKey = JsonConvert.DeserializeObject<string>(apiKeyJson);
+			}
+		}
 		public void LoadPresetsFromFile()
 		{
 			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -334,43 +384,54 @@ namespace ChuyenDoiDonHang
 
 		private async void testToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			try
+			//try
+			//{
+			//	Address address = new Address
+			//	{
+			//		AddressLine1 = "7307 Southwind Dr",
+			//		City = "Chesterfield",
+			//		State = "Virginia",
+			//		PostalCode = "23832",
+			//		Country = "US"
+			//	};
+			//	//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
+			//	string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
+			//	string apiKey = "Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**";
+
+			//	//string requestUrl = $"{apiUrl}?AddressLine1={address.AddressLine1}&City={address.City}&State={address.State}&PostalCode={address.PostalCode}&Country={address.Country}&Key={apiKey}";
+			//	string requestUrl = $"{apiUrl}?id={apiKey}&a1={address.AddressLine1}&loc={address.City}&admarea={address.State}&postal={address.PostalCode}&ctry={address.Country}&format=JSON";
+
+			//	HttpClient client = new HttpClient();
+			//	HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+			//	if (response.IsSuccessStatusCode)
+			//	{
+			//		string responseBody = await response.Content.ReadAsStringAsync();
+			//		Console.WriteLine(responseBody);
+			//		// Xử lý phản hồi từ API ở đây
+			//	}
+			//	else
+			//	{
+			//		// Xử lý khi yêu cầu thất bại
+			//	}
+			//}
+			//catch (Exception ex)
+			//{
+			//	MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			//	lblResult.Text = "Result: " + ex.Message;
+			//}
+			string NewAPIKey = Microsoft.VisualBasic.Interaction.InputBox("Nhập API Key mới: ", "API Key", "");
+			if (!string.IsNullOrEmpty(NewAPIKey))
 			{
-				Address address = new Address
-				{
-					AddressLine1 = "7307 Southwind Dr",
-					City = "Chesterfield",
-					State = "Virginia",
-					PostalCode = "23832",
-					Country = "US"
-				};
-				//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
-				string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
-				string apiKey = "eofMMY1Vf3p3zZqFjq_Gb6**nSAcwXpxhQ0PC2lXxuDAZ-**"; // Thay YOUR_API_KEY bằng API key của bạn
-
-				//string requestUrl = $"{apiUrl}?AddressLine1={address.AddressLine1}&City={address.City}&State={address.State}&PostalCode={address.PostalCode}&Country={address.Country}&Key={apiKey}";
-				string requestUrl = $"{apiUrl}?id={apiKey}&a1={address.AddressLine1}&loc={address.City}&admarea={address.State}&postal={address.PostalCode}&ctry={address.Country}&format=JSON";
-
-				HttpClient client = new HttpClient();
-				HttpResponseMessage response = await client.GetAsync(requestUrl);
-
-				if (response.IsSuccessStatusCode)
-				{
-					string responseBody = await response.Content.ReadAsStringAsync();
-					Console.WriteLine(responseBody);
-					// Xử lý phản hồi từ API ở đây
-				}
-				else
-				{
-					// Xử lý khi yêu cầu thất bại
-				}
+				File.WriteAllText(APIKeyPath, JsonConvert.SerializeObject(NewAPIKey));
+				string apiKeyJson = File.ReadAllText(APIKeyPath, Encoding.UTF8);
+				apiKey = JsonConvert.DeserializeObject<string>(apiKeyJson);
+				MessageBox.Show("Đổi API Key thành công!");
 			}
-			catch (Exception ex)
+			else
 			{
-				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				lblResult.Text = "Result: " + ex.Message;
+				MessageBox.Show("Đổi API Key không thành công!");
 			}
-			
 		}
 		private async Task VerifyAddresses(List<OrderOut> ordersOut)
 		{
@@ -379,9 +440,15 @@ namespace ChuyenDoiDonHang
 				int dem = 0;
 				string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
 				//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
-				string apiKey = "Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**";
-                foreach (OrderOut order in ordersOut)
+				//string apiKey = "Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**";
+				foreach (OrderOut order in ordersOut)
 				{
+					if (order.Countrycode != "US")
+					{
+						dem++;
+						order.VerifyAddress = "NOT US";
+						continue;
+					}
 					string requestUrl = $"{apiUrl}?id={apiKey}&a1={order.Street}&loc={order.City}&admarea={order.Province}&postal={order.Postcode}&ctry={order.Countrycode}&format=JSON";
 
 					HttpClient client = new HttpClient();
@@ -406,7 +473,7 @@ namespace ChuyenDoiDonHang
 							order.VerifyAddress = "FALSE"; // Địa chỉ không hợp lệ
 						}
 						else
-						{ 
+						{
 							order.VerifyAddress = "NOCREDIT";
 						}
 					}
@@ -425,62 +492,62 @@ namespace ChuyenDoiDonHang
 				lblResult.Text = "Result: " + ex.Message;
 			}
 		}
-        private int CountingGach(string LineitemSku)
-        {
-            try
-            {
+		private int CountingGach(string LineitemSku)
+		{
+			try
+			{
 				return LineitemSku.Split('-').Length - 1;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                lblResult.Text = "Result: " + ex.Message;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				lblResult.Text = "Result: " + ex.Message;
 				return -1;
-            }
-        }
-        private string SizeCalculator(string LineitemSku)
-        {
-            try
-            {
-                if (CountingGach(LineitemSku) >= 2)
-                {
-                    // Tách chuỗi thành mảng các phần
-                    string[] phanTach = LineitemSku.Split('-');
+			}
+		}
+		private string SizeCalculator(string LineitemSku)
+		{
+			try
+			{
+				if (CountingGach(LineitemSku) >= 2)
+				{
+					// Tách chuỗi thành mảng các phần
+					string[] phanTach = LineitemSku.Split('-');
 					string size = phanTach[phanTach.Length - 1].Trim();
 
-                    if (size != "S" && size != "M" && size != "L" && size != "XL" && size != "XL" && size != "3XL" && size != "4XL" && size != "5XL")
+					if (size != "S" && size != "M" && size != "L" && size != "XL" && size != "XL" && size != "3XL" && size != "4XL" && size != "5XL")
 					{
-                        return "#######";
-                    }
+						return "#######";
+					}
 
-                    // Trả về size
-                    return phanTach[phanTach.Length - 1];
-                }
-                else { return "#######"; }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return "#######";
-            }
-        }
-        private string GetCustomName(string LineitemProperties)
-        {
-            try
-            {
-                if (LineitemProperties.Length > 0)
-                {
-                    // Tách chuỗi thành mảng các phần
-                    string[] phanTach = LineitemProperties.Split(':');
-                    return phanTach[phanTach.Length - 1].Trim();
-                }
-                else { return ""; }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return "";
-            }
-        }
-    }
+					// Trả về size
+					return phanTach[phanTach.Length - 1];
+				}
+				else { return "#######"; }
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return "#######";
+			}
+		}
+		private string GetCustomName(string LineitemProperties)
+		{
+			try
+			{
+				if (LineitemProperties.Length > 0)
+				{
+					// Tách chuỗi thành mảng các phần
+					string[] phanTach = LineitemProperties.Split(':');
+					return phanTach[phanTach.Length - 1].Trim();
+				}
+				else { return ""; }
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return "";
+			}
+		}
+	}
 }
