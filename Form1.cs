@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
 using System.Reflection.Emit;
+using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
@@ -78,7 +79,8 @@ namespace ChuyenDoiDonHang
 								ID = p.Name,
 								ProductSKU = p.LineitemSku,
 								Size = SizeCalculator(p.LineitemSku),
-								Quantity = p.LineitemQuantity,
+                                CustomName = GetCustomName(p.LineitemProperties),
+                                Quantity = p.LineitemQuantity,
 								Name = p.ShippingName,
 								Telephone = p.ShippingPhone,
 								Countrycode = p.ShippingCountryCode,
@@ -460,6 +462,25 @@ namespace ChuyenDoiDonHang
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "#######";
+            }
+        }
+        private string GetCustomName(string LineitemProperties)
+        {
+            try
+            {
+                if (LineitemProperties.Length > 0)
+                {
+                    // Tách chuỗi thành mảng các phần
+                    string[] phanTach = LineitemProperties.Split(':');
+                    return phanTach[phanTach.Length - 1].Trim();
+
+                }
+                else { return ""; }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
             }
         }
     }
