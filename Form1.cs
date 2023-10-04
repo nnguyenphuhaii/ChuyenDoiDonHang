@@ -79,7 +79,7 @@ namespace ChuyenDoiDonHang
 								ID = p.Name,
 								ProductSKU = p.LineitemSku,
 								Size = SizeCalculator(p.LineitemSku),
-                                CustomName = GetCustomName(p.LineitemProperties),
+                                CustomName = p.LineitemProperties,
                                 Quantity = p.LineitemQuantity,
 								Name = p.ShippingName,
 								Telephone = p.ShippingPhone,
@@ -473,7 +473,6 @@ namespace ChuyenDoiDonHang
                     // Tách chuỗi thành mảng các phần
                     string[] phanTach = LineitemProperties.Split(':');
                     return phanTach[phanTach.Length - 1].Trim();
-
                 }
                 else { return ""; }
             }
