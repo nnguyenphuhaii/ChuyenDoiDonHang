@@ -1,5 +1,4 @@
-﻿using ChuyenDoiDonHang.HereAPI;
-using ChuyenDoiDonHang.Model;
+﻿using ChuyenDoiDonHang.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
@@ -9,6 +8,7 @@ using System.Globalization;
 using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace ChuyenDoiDonHang
 {
@@ -42,6 +42,7 @@ namespace ChuyenDoiDonHang
 
 					// Đọc dữ liệu từ file CSV
 					orders.Clear();
+					ordersOut.Clear();
 					using (var reader = new StreamReader(filePath))
 					{
 						var config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -54,17 +55,37 @@ namespace ChuyenDoiDonHang
 							//Order firstRow = orders.FirstOrDefault();
 							//ordersOut.Add(firstRow);
 							orders.RemoveAt(0);
+
+							foreach (Order order in orders)
+							{
+								if (order.LineitemSku == null)
+								{
+									break;
+								}
+                                if (CountingGach(order.LineitemSku) >= 2)
+                                {
+                                    // Tách chuỗi thành mảng các phần
+                                    string[] phanTach = order.LineitemSku.Split('-');
+
+                                    // Lấy phần tử cuối cùng trong mảng
+                                    string kyTuSauDauGach = phanTach[phanTach.Length - 1];
+
+                                    Console.WriteLine($"Ký tự sau dấu gạch thứ hai là: {kyTuSauDauGach}");
+                                }
+                            }
 							ordersOut = orders.Select(p => new OrderOut
 							{
 								ID = p.Name,
 								ProductSKU = p.LineitemSku,
+								Size = SizeCalculator(p.LineitemSku),
 								Quantity = p.LineitemQuantity,
 								Name = p.ShippingName,
 								Telephone = p.ShippingPhone,
-								Countrycode = p.ShippingCountry,
+								Countrycode = p.ShippingCountryCode,
+								MockupLink = p.LineitemImage,
 								Province = p.ShippingProvince,
 								City = p.ShippingCity,
-								Street = p.ShippingAddress1,
+								Street = p.ShippingAddress1 + ", " + p.ShippingAddress2,
 								Postcode = p.ShippingZip
 							}).ToList();
 
@@ -85,12 +106,17 @@ namespace ChuyenDoiDonHang
 										{
 											orderOut.ProductSKU = formula.SKUYocol;
 										}
-									}
-								}
+										else
+										{
+											orderOut.ProductSKU = "#######";
+                                        }
+                                    }
+                                }
 							}
 						}
 					}
-					await VerifyAddresses(ordersOut);
+					// Tắt tạm để test những tính năng khác
+					//await VerifyAddresses(ordersOut);
 					lblResult.Text = "Thành công.\nVui lòng bấm Run để chạy và xuất file.";
 				}
 			}
@@ -352,7 +378,7 @@ namespace ChuyenDoiDonHang
 				string apiUrl = "https://personator.melissadata.net/v3/WEB/ContactVerify/doContactVerify";
 				//string apiUrl = "https://address.melissadata.net/v3/WEB/GlobalAddress/doGlobalAddress";
 				string apiKey = "Dh8bYYAxNZwYQ56pYOPJ2O**nSAcwXpxhQ0PC2lXxuDAZ-**";
-				foreach (OrderOut order in ordersOut)
+                foreach (OrderOut order in ordersOut)
 				{
 					string requestUrl = $"{apiUrl}?id={apiKey}&a1={order.Street}&loc={order.City}&admarea={order.Province}&postal={order.Postcode}&ctry={order.Countrycode}&format=JSON";
 
@@ -397,6 +423,44 @@ namespace ChuyenDoiDonHang
 				lblResult.Text = "Result: " + ex.Message;
 			}
 		}
+        private int CountingGach(string LineitemSku)
+        {
+            try
+            {
+				return LineitemSku.Split('-').Length - 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblResult.Text = "Result: " + ex.Message;
+				return -1;
+            }
+        }
+        private string SizeCalculator(string LineitemSku)
+        {
+            try
+            {
+                if (CountingGach(LineitemSku) >= 2)
+                {
+                    // Tách chuỗi thành mảng các phần
+                    string[] phanTach = LineitemSku.Split('-');
+					string size = phanTach[phanTach.Length - 1].Trim();
 
-	}
+                    if (size != "S" && size != "M" && size != "L" && size != "XL" && size != "XL" && size != "3XL" && size != "4XL" && size != "5XL")
+					{
+                        return "#######";
+                    }
+
+                    // Trả về size
+                    return phanTach[phanTach.Length - 1];
+                }
+                else { return "#######"; }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "#######";
+            }
+        }
+    }
 }

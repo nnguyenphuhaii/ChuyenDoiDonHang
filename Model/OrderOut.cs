@@ -1,5 +1,4 @@
-﻿using EasyPost.Models.API;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,11 +24,8 @@ namespace ChuyenDoiDonHang.Model
 		public string? BaseCost { get; set; }
 		public string? VAT { get; set; }
 		public string? Note { get; set; }
-		public string? Lenful { get; set; }
-		public string? BurgerPrints { get; set; }
-		public string? MTF { get; set; }
-		public string? Ads { get; set; }
-		public string? VerifyAddress { get; set; }
+		public string? CustomName { get; set; }
+        public string? VerifyAddress { get; set; }
 
 		public Address ToAddress()
 		{
